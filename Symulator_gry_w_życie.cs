@@ -9,7 +9,6 @@ namespace Gra_w_życie__Conwaya;
 class Symulator_gry_w_życie
 {
     protected const uint dlugosc_boku_planszy = 6;
-    const uint ilosc_somsiaduw_konieczna_do_rzycia = 3;
 
     internal bool[,] plansza = new bool[dlugosc_boku_planszy, dlugosc_boku_planszy];
 
@@ -81,7 +80,8 @@ class Symulator_gry_w_życie
         {
             for (uint j = 0; j<dlugosc_boku_planszy; j++)
             {
-                plansza[i, j] = (PoliczRzywychSomsiaduw(i, j) == ilosc_somsiaduw_konieczna_do_rzycia);
+                uint liczba_rzywych_somsiaduw = PoliczRzywychSomsiaduw(i, j);
+                plansza[i, j] = (liczba_rzywych_somsiaduw == 2  ||  liczba_rzywych_somsiaduw == 3);
             }
         }
     }
