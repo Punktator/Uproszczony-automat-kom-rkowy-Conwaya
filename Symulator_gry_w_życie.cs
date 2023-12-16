@@ -15,33 +15,61 @@ class Symulator_gry_w_życie
 
     internal void Zainicjuj(List<Kordy> lista_korduw) 
     {
-        foreach (var kord in lista_korduw)
+        for (uint i = 0; i < dlugosc_boku_planszy; i++)
         {
-            plansza[kord.x, kord.y] = true;
+            for (uint j = 0; j < dlugosc_boku_planszy; j++)
+            {           
+                plansza[i, j] = false; 
+            }
+        }
+
+        foreach (Kordy iterator in lista_korduw)
+        {
+            plansza[iterator.x, iterator.y] = true;
         }
     }
 
-    uint PoliczRzywychSomsiaduw(Kordy kordy_komurki)
+    uint PoliczRzywychSomsiaduw(uint x, uint y)    //w tzw. sąsiedztwie Moore'a
     {
         uint licznik = 0;
 
-        if (kordy_komurki.x > 0)          //w informatyce zanczynamy od 0
+        if (x > 0)          //w informatyce zanczynamy od 0
         {
-            if (plansza[kordy_komurki.x - 1, kordy_komurki.y])
+            if (y > 0)
+            {
+                if (plansza[x - 1, y - 1])
+                    licznik++;
+            }
+            if (y < dlugosc_boku_planszy - 1)
+            {
+                if (plansza[x-1, y+1])
+                    licznik++;
+            }
+            if (plansza[x - 1, y])
                 licznik++;
         }
-        if (kordy_komurki.x < dlugosc_boku_planszy-1)
+        if (x < dlugosc_boku_planszy-1)
         {
-            if (plansza[kordy_komurki.x + 1, kordy_komurki.y])
+            if (plansza[x + 1, y])
                 licznik++;
+            if (y > 0)
+            {
+                if (plansza[x + 1, y - 1])
+                    licznik++;
+            }
+            if (y < dlugosc_boku_planszy-1)
+            {
+                if (plansza[x + 1, y + 1])
+                    licznik++;
+            }
         }
-        if (kordy_komurki.y > 0)
+        if (y > 0)
         {
-            if (plansza[kordy_komurki.x, kordy_komurki.y - 1]) licznik++;
+            if (plansza[x, y - 1]) licznik++;
         }
-        if (kordy_komurki.y < dlugosc_boku_planszy-1)
+        if (y < dlugosc_boku_planszy-1)
         {
-            if (plansza[kordy_komurki.x, kordy_komurki.y + 1]) licznik++;
+            if (plansza[x, y + 1]) licznik++;
         }
 
         return licznik;
@@ -49,17 +77,11 @@ class Symulator_gry_w_życie
 
     protected void Iteruj()
     {
-        var nowe_kordy = new Kordy();
-
         for (uint i = 0; i<dlugosc_boku_planszy; i++)
         {
             for (uint j = 0; j<dlugosc_boku_planszy; j++)
             {
-                nowe_kordy.x = i;
-                nowe_kordy.y = j;
-                if (PoliczRzywychSomsiaduw(nowe_kordy) == ilosc_somsiaduw_konieczna_do_rzycia)
-                    plansza[i, j] = true;
-                else plansza[i, j] = false;
+                plansza[i, j] = (PoliczRzywychSomsiaduw(i, j) == ilosc_somsiaduw_konieczna_do_rzycia);
             }
         }
     }
@@ -75,4 +97,20 @@ struct Kordy
 {
     public uint x;
     public uint y;
+
+    public Kordy(uint nowy_x, uint nowy_y)
+    {
+        this.x = nowy_x;
+        this.y = nowy_y;
+    }
+
+    public static bool operator==(Kordy a, Kordy b)
+    {
+        return a.x == b.x && a.y == b.y;
+    }
+
+    public static bool operator!=(Kordy a, Kordy b)
+    {
+        return a.x != b.x || a.y != b.y;
+    }
 }
