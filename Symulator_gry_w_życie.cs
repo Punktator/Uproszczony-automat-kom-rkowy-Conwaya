@@ -8,7 +8,7 @@ namespace Gra_w_życie__Conwaya;
 
 class Symulator_gry_w_życie
 {
-    protected const uint dlugosc_boku_planszy = 6;
+    internal const uint dlugosc_boku_planszy = 6;
 
     internal bool[,] plansza = new bool[dlugosc_boku_planszy, dlugosc_boku_planszy];
 
