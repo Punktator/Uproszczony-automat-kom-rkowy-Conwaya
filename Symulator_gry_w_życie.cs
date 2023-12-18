@@ -12,20 +12,30 @@ class Symulator_gry_w_życie
 
     internal bool[,] plansza = new bool[dlugosc_boku_planszy, dlugosc_boku_planszy];
 
-    internal void Zainicjuj(List<Kordy> lista_korduw) 
+    internal Symulator_gry_w_życie(List<Kordy> lista_korduw)
+    {
+        Inicjalizuj();
+
+        foreach (Kordy iterator in lista_korduw)
+        {
+            this.plansza[iterator.x, iterator.y] = true;
+        }
+    }
+
+    private void Inicjalizuj()
     {
         for (uint i = 0; i < dlugosc_boku_planszy; i++)
         {
             for (uint j = 0; j < dlugosc_boku_planszy; j++)
-            {           
-                plansza[i, j] = false; 
+            {
+                this.plansza[i, j] = false;
             }
         }
+    }
 
-        foreach (Kordy iterator in lista_korduw)
-        {
-            plansza[iterator.x, iterator.y] = true;
-        }
+    internal Symulator_gry_w_życie()
+    {
+        Inicjalizuj();
     }
 
     uint PoliczRzywychSomsiaduw(uint x, uint y)    //w tzw. sąsiedztwie Moore'a
@@ -36,7 +46,7 @@ class Symulator_gry_w_życie
         {
             if (y > 0)
             {
-                if (plansza[x - 1, y - 1])
+                if (this.plansza[x - 1, y - 1])
                     licznik++;
             }
             if (y < dlugosc_boku_planszy - 1)
@@ -44,31 +54,31 @@ class Symulator_gry_w_życie
                 if (plansza[x-1, y+1])
                     licznik++;
             }
-            if (plansza[x - 1, y])
+            if (this.plansza[x - 1, y])
                 licznik++;
         }
         if (x < dlugosc_boku_planszy-1)
         {
-            if (plansza[x + 1, y])
+            if (this.plansza[x + 1, y])
                 licznik++;
             if (y > 0)
             {
-                if (plansza[x + 1, y - 1])
+                if (this.plansza[x + 1, y - 1])
                     licznik++;
             }
             if (y < dlugosc_boku_planszy-1)
             {
-                if (plansza[x + 1, y + 1])
+                if (this.plansza[x + 1, y + 1])
                     licznik++;
             }
         }
         if (y > 0)
         {
-            if (plansza[x, y - 1]) licznik++;
+            if (this.plansza[x, y - 1]) licznik++;
         }
         if (y < dlugosc_boku_planszy-1)
         {
-            if (plansza[x, y + 1]) licznik++;
+            if (this.plansza[x, y + 1]) licznik++;
         }
 
         return licznik;
@@ -76,14 +86,18 @@ class Symulator_gry_w_życie
 
     protected void Iteruj()
     {
+        Symulator_gry_w_życie nowa_faza = new();
+
         for (uint i = 0; i<dlugosc_boku_planszy; i++)
         {
             for (uint j = 0; j<dlugosc_boku_planszy; j++)
             {
                 uint liczba_rzywych_somsiaduw = PoliczRzywychSomsiaduw(i, j);
-                plansza[i, j] = (liczba_rzywych_somsiaduw == 2  ||  liczba_rzywych_somsiaduw == 3);
+                nowa_faza.plansza[i, j] = (liczba_rzywych_somsiaduw == 2  ||  liczba_rzywych_somsiaduw == 3);
             }
         }
+
+        this.plansza = nowa_faza.plansza;
     }
 
     internal void CyklRzycia(uint ilosc_cykli)
