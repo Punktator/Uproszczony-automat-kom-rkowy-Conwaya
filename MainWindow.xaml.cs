@@ -22,6 +22,7 @@ namespace Gra_w_życie__Conwaya
     public partial class MainWindow : Window
     {
         private const int gridSize = 5; // Zdefiniuj rozmiar siatki
+        internal Symulator_gry_w_życie symulator;
 
         public MainWindow()
         {
@@ -31,11 +32,13 @@ namespace Gra_w_życie__Conwaya
 
         private void InitializeGrid()
         {
-            for (int row = 0; row < Symulator_gry_w_życie.dlugosc_boku_planszy; row++)
+            symulator = new();
+
+            for (int row = 0; row < Symulator_gry_w_życie.dlugosc_boku_planszy-1; row++)
             {
                 dynamicGrid.RowDefinitions.Add(new RowDefinition() { Height = GridLength.Auto });
 
-                for (int col = 0; col < Symulator_gry_w_życie.dlugosc_boku_planszy; col++)
+                for (int col = 0; col < Symulator_gry_w_życie.dlugosc_boku_planszy-1; col++)
                 {
                     if (row == 0) // Dodaj kolumny tylko raz (w pierwszym wierszu)
                     {
@@ -48,7 +51,7 @@ namespace Gra_w_życie__Conwaya
                     // Dodaj obsługę zdarzenia dla każdego CheckBox
                     checkBox.Click += (sender, e) =>
                     {
-                        MessageBox.Show($"Zaznaczono: {checkBox.Content}");
+                        symulator.plansza[col, row] = true;
                     };
 
                     // Ustaw pozycję CheckBox w siatce
